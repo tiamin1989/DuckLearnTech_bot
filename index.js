@@ -40,24 +40,31 @@ bot.on("pre_checkout_query", (ctx) => {
 bot.on("successful_payment", async (ctx) => {
   User.findOne({ chatId: String(ctx.from.id) })
     .then((res) => {
+      const payedAction = JSON.parse(
+        ctx.update.message.successful_payment.invoice_payload
+      ).action;
       if (res !== null) {
+        // Если клиент есть в базе, добавим запись
         User.findByIdAndUpdate(res._id, {
           $push: {
-            payed: JSON.parse(
-              ctx.update.message.successful_payment.invoice_payload
-            ).action,
+            payed: payedAction,
           },
         }).exec();
       }
-      // Если клиента нет в базе - работает
+      // Если клиента нет в базе, создадим запись
       else {
         User.create({
           chatId: ctx.from.id,
-          payed: JSON.parse(
-            ctx.update.message.successful_payment.invoice_payload
-          ).action,
+          payed: payedAction,
         });
       }
+      return ctx.replyWithHTML(
+        "Оплата прошла <b>успешно</b>! 🎉 Теперь Вам доступны необходимые материалы:",
+        Markup.inlineKeyboard([
+          Markup.callbackButton("🤓 Перейти", payedAction),
+          Markup.callbackButton("☰ Главное меню", "action_main"),
+        ]).extra()
+      );
     })
     .catch((err) => {
       ctx.deleteMessage();

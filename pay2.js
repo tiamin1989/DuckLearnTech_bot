@@ -107,6 +107,49 @@ const payFuncs = (bot) => {
       getInvoiceCategory(ctx.from.id, "action_1cb_c_m_m_s_m")
     );
   });
+
+  /* 1С-Битрикс -> Администратор. Базовый */
+  bot.action("pay_action_1cb_a_b_b_a", (ctx) => {
+    ctx.deleteMessage();
+    return ctx.replyWithInvoice(
+      getInvoiceCategory(ctx.from.id, "action_1cb_a_b_b_a")
+    );
+  });
+
+  bot.action("pay_action_1cb_a_b_u_a", (ctx) => {
+    ctx.deleteMessage();
+    return ctx.replyWithInvoice(
+      getInvoiceCategory(ctx.from.id, "action_1cb_a_b_u_a")
+    );
+  });
+
+  bot.action("pay_action_1cb_a_b_sec", (ctx) => {
+    ctx.deleteMessage();
+    return ctx.replyWithInvoice(
+      getInvoiceCategory(ctx.from.id, "action_1cb_a_b_sec")
+    );
+  });
+
+  bot.action("pay_action_1cb_a_b_p_r", (ctx) => {
+    ctx.deleteMessage();
+    return ctx.replyWithInvoice(
+      getInvoiceCategory(ctx.from.id, "action_1cb_a_b_p_r")
+    );
+  });
+
+  bot.action("pay_action_1cb_a_b_b", (ctx) => {
+    ctx.deleteMessage();
+    return ctx.replyWithInvoice(
+      getInvoiceCategory(ctx.from.id, "action_1cb_a_b_b")
+    );
+  });
+
+  bot.action("pay_action_1cb_a_b_s", (ctx) => {
+    ctx.deleteMessage();
+    return ctx.replyWithInvoice(
+      getInvoiceCategory(ctx.from.id, "action_1cb_a_b_s")
+    );
+  });
 };
 
 module.exports = {

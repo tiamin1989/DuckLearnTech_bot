@@ -2,6 +2,8 @@ const { Markup } = require("telegraf");
 
 const User = require("../mongoose/model-user");
 
+const { delMessages, addMessage } = require("../message-utils");
+
 /* Текст подразделов курса */
 const text_1c_bitrix_content_manager_controls = `<b>⭐ Компания:</b> 1С-Битрикс\n<b>✍ Курс:</b> Контент-менеджер\n⛳ <b>Подраздел:</b> Элементы Управления\n
 ▶ <b>Какая кнопка служит для перехода в публичный раздел сайта?</b>\n  • 1\n
@@ -128,58 +130,60 @@ const text_1c_bitrix_content_manager_modules_site_manage = `<b>⭐ Компан�
 
 const run_action_1c_bitrix_content_manager = (bot) => {
   bot.action("action_1c_bitrix_content_manager", (ctx) => {
-    ctx.deleteMessage();
-    return ctx.replyWithHTML(
-      "⭐ <b>Компания:</b> 1С-Битрикс\n✍ <b>Курс:</b> Контент-менеджер\n\nВыберите необходимый подраздел курса:",
-      Markup.inlineKeyboard([
-        [
-          Markup.callbackButton(
-            "Элементы управления (11)",
-            "action_1cb_c_m_c"
-          ),
-        ],
-        [
-          Markup.callbackButton(
-            "Информация на сайте и работа с ней (10)",
-            "action_1cb_c_m_s_i"
-          ),
-        ],
-        [
-          Markup.callbackButton(
-            "Управление структурой (15)",
-            "action_1cb_c_m_s_m"
-          ),
-        ],
-        [
-          Markup.callbackButton(
-            "Визуальный редактор (12)",
-            "action_1cb_c_m_v_e"
-          ),
-        ],
-        [
-          Markup.callbackButton(
-            "Компоненты 2.0 (11)",
-            "action_1cb_c_m_c2"
-          ),
-        ],
-        [
-          Markup.callbackButton(
-            "Информационные блоки (26)",
-            "action_1cb_c_m_i_b"
-          ),
-        ],
-        [
-          Markup.callbackButton(
-            "Работа с модулями 1С-Битрикс: Управление сайтом (24)",
-            "action_1cb_c_m_m_s_m"
-          ),
-        ],
-        [
-          Markup.callbackButton("☰ Главное меню", "action_main"),
-          Markup.callbackButton("⬅ Назад", "action_1c_bitrix"),
-        ],
-      ]).extra()
-    );
+    delMessages(ctx);
+    return Promise.all([
+      ctx.replyWithHTML(
+        "⭐ <b>Компания:</b> 1С-Битрикс\n✍ <b>Курс:</b> Контент-менеджер\n\nВыберите необходимый подраздел курса:",
+        Markup.inlineKeyboard([
+          [
+            Markup.callbackButton(
+              "Элементы управления (11)",
+              "action_1cb_c_m_c"
+            ),
+          ],
+          [
+            Markup.callbackButton(
+              "Информация на сайте и работа с ней (10)",
+              "action_1cb_c_m_s_i"
+            ),
+          ],
+          [
+            Markup.callbackButton(
+              "Управление структурой (15)",
+              "action_1cb_c_m_s_m"
+            ),
+          ],
+          [
+            Markup.callbackButton(
+              "Визуальный редактор (12)",
+              "action_1cb_c_m_v_e"
+            ),
+          ],
+          [
+            Markup.callbackButton(
+              "Компоненты 2.0 (11)",
+              "action_1cb_c_m_c2"
+            ),
+          ],
+          [
+            Markup.callbackButton(
+              "Информационные блоки (26)",
+              "action_1cb_c_m_i_b"
+            ),
+          ],
+          [
+            Markup.callbackButton(
+              "Работа с модулями 1С-Битрикс: Управление сайтом (24)",
+              "action_1cb_c_m_m_s_m"
+            ),
+          ],
+          [
+            Markup.callbackButton("☰ Главное меню", "action_main"),
+            Markup.callbackButton("⬅ Назад", "action_1c_bitrix"),
+          ],
+        ]).extra()
+      ),
+    ]).then((results) => addMessage(results[0].message_id));
   });
 
   const createAction = (action, text) => {
@@ -189,24 +193,57 @@ const run_action_1c_bitrix_content_manager = (bot) => {
         .then((res) => {
           if (res !== null) {
             if (res.payed.includes("action_1c_bitrix") || res.payed.includes(action)) {
-              ctx.deleteMessage();
-              return ctx.replyWithHTML(
-                text,
-                Markup.inlineKeyboard([
-                  [
-                    Markup.callbackButton("☰ Главное меню", "action_main"),
-                    Markup.callbackButton(
-                      "⬅ Назад",
-                      "action_1c_bitrix_content_manager"
-                    ),
-                  ],
-                ]).extra()
-              );
+              delMessages(ctx);
+              return Promise.all([
+                ctx.replyWithHTML(
+                  text,
+                  Markup.inlineKeyboard([
+                    [
+                      Markup.callbackButton("☰ Главное меню", "action_main"),
+                      Markup.callbackButton(
+                        "⬅ Назад",
+                        "action_1c_bitrix_content_manager"
+                      ),
+                    ],
+                  ]).extra()
+                ),
+              ]).then((results) => addMessage(results[0].message_id))
             } else {
               // Если клиент есть в базе, но подписка не оформлена
-              ctx.deleteMessage();
-              return ctx.replyWithHTML(
-                `ℹ Для получения доступа в этот подраздел необходимо приобрести подписку.\n\nВы можете приобрести подписку как на отдельный подраздел курса, либо приобрести <b>полный доступ</b> ко всем курсам компании <b>1С-Битрикс</b>.`,
+              delMessages(ctx);
+              return Promise.all([
+                ctx.replyWithHTML(
+                  `ℹ Для получения доступа в этот подраздел необходимо приобрести подписку.\n\nВы можете приобрести подписку как на отдельный подраздел курса, либо приобрести <b>полный доступ</b> ко всем курсам компании <b>1С-Битрикс</b>.`,
+                  Markup.inlineKeyboard([
+                    [
+                      Markup.callbackButton(
+                        "💳 Оплатить за подраздел 75 руб",
+                        `pay_${action}`
+                      ),
+                    ],
+                    [
+                      Markup.callbackButton(
+                        "💳 Оплатить полный доступ за 300 руб",
+                        "pay_action_1c_bitrix"
+                      ),
+                    ],
+                    [
+                      Markup.callbackButton("☰ Главное меню", "action_main"),
+                      Markup.callbackButton(
+                        "⬅ Назад",
+                        "action_1c_bitrix_content_manager"
+                      ),
+                    ],
+                  ]).extra()
+                ),
+              ]).then((results) => addMessage(results[0].message_id));
+            }
+          } else {
+            // Если клиента нет в базе
+            delMessages(ctx);
+            return Promise.all([
+              ctx.replyWithHTML(
+                `ℹ Для получения доступа необходимо приобрести подписку. Подписка оплачивается разово и действует <b>бессрочно</b>.\n\nВы можете приобрести подписку как на отдельный подраздел курса, либо приобрести <b>полный доступ</b> ко всем курсам компании <b>1С-Битрикс</b>.`,
                 Markup.inlineKeyboard([
                   [
                     Markup.callbackButton(
@@ -216,7 +253,7 @@ const run_action_1c_bitrix_content_manager = (bot) => {
                   ],
                   [
                     Markup.callbackButton(
-                      "💳 Оплатить полный доступ за 300 руб",
+                      "💳 Получить полный доступ за 300 руб",
                       "pay_action_1c_bitrix"
                     ),
                   ],
@@ -228,26 +265,16 @@ const run_action_1c_bitrix_content_manager = (bot) => {
                     ),
                   ],
                 ]).extra()
-              );
-            }
-          } else {
-            // Если клиента нет в базе
-            ctx.deleteMessage();
-            return ctx.replyWithHTML(
-              `ℹ Для получения доступа необходимо приобрести подписку. Подписка оплачивается разово и действует <b>бессрочно</b>.\n\nВы можете приобрести подписку как на отдельный подраздел курса, либо приобрести <b>полный доступ</b> ко всем курсам компании <b>1С-Битрикс</b>.`,
+              ),
+            ]).then((results) => addMessage(results[0].message_id));
+          }
+        })
+        .catch((err) => {
+          delMessages(ctx);
+          return Promise.all([
+            ctx.replyWithHTML(
+              `⚠ Произошла ошибка:\n<b>${err.message}</b>\nПожалуйста, обратитесь к администратору @tiamin1989`,
               Markup.inlineKeyboard([
-                [
-                  Markup.callbackButton(
-                    "💳 Оплатить за подраздел 75 руб",
-                    `pay_${action}`
-                  ),
-                ],
-                [
-                  Markup.callbackButton(
-                    "💳 Получить полный доступ за 300 руб",
-                    "pay_action_1c_bitrix"
-                  ),
-                ],
                 [
                   Markup.callbackButton("☰ Главное меню", "action_main"),
                   Markup.callbackButton(
@@ -256,23 +283,8 @@ const run_action_1c_bitrix_content_manager = (bot) => {
                   ),
                 ],
               ]).extra()
-            );
-          }
-        })
-        .catch((err) => {
-          ctx.deleteMessage();
-          return ctx.replyWithHTML(
-            `⚠ Произошла ошибка:\n<b>${err.message}</b>\nПожалуйста, обратитесь к администратору @tiamin1989`,
-            Markup.inlineKeyboard([
-              [
-                Markup.callbackButton("☰ Главное меню", "action_main"),
-                Markup.callbackButton(
-                  "⬅ Назад",
-                  "action_1c_bitrix_content_manager"
-                ),
-              ],
-            ]).extra()
-          );
+            ),
+          ]).then((results) => addMessage(results[0].message_id));
         });
     });
   };

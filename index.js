@@ -1,6 +1,8 @@
 const { Telegraf, Markup } = require("telegraf");
 require("dotenv").config();
 
+const { delMessages, addMessage } = require("./message-utils");
+
 // База данных
 const User = require("./mongoose/model-user");
 
@@ -20,13 +22,17 @@ const bot = new Telegraf(process.env.BOT_TOKEN); //сюда помещается
 /* bot.use(Telegraf.log()); */
 
 bot.command("start", (ctx) => {
-  return ctx.replyWithHTML(
-    "Привет, это <b>DuckLearnTech_bot</b> 🎉. Я помогу Вам с курсами. Давайте, для начала, выберем компанию, курсы которой изучаете:",
-    Markup.inlineKeyboard([
-      [Markup.callbackButton("1С-Битрикс", "action_1c_bitrix")],
-      [Markup.callbackButton("🖨 Договор-оферта", "action_license")],
-    ]).extra()
-  );
+  return Promise.all([
+    ctx.replyWithHTML(
+      "Привет, это <b>DuckLearnTech_bot</b> 🎉. Я помогу Вам с курсами. Давайте, для начала, выберем компанию, курсы которой изучаете:",
+      Markup.inlineKeyboard([
+        [Markup.callbackButton("1С-Битрикс", "action_1c_bitrix")],
+        [Markup.callbackButton("🖨 Договор-оферта", "action_license")],
+      ]).extra()
+    ),
+  ]).then((results) => {
+    addMessage(results[0].message_id);
+  });
 });
 
 actions(bot);
@@ -58,22 +64,26 @@ bot.on("successful_payment", async (ctx) => {
           payed: payedAction,
         });
       }
-      return ctx.replyWithHTML(
-        "Оплата прошла <b>успешно</b>! 🎉 Теперь Вам доступны необходимые материалы:",
-        Markup.inlineKeyboard([
-          Markup.callbackButton("🤓 Перейти", payedAction),
-          Markup.callbackButton("☰ Главное меню", "action_main"),
-        ]).extra()
-      );
+      return Promise.all([
+        ctx.replyWithHTML(
+          "Оплата прошла <b>успешно</b>! 🎉 Теперь Вам доступны необходимые материалы:",
+          Markup.inlineKeyboard([
+            Markup.callbackButton("🤓 Перейти", payedAction),
+            Markup.callbackButton("☰ Главное меню", "action_main"),
+          ]).extra()
+        ),
+      ]).then((results) => addMessage(results[0].message_id));
     })
     .catch((err) => {
-      ctx.deleteMessage();
-      return ctx.replyWithHTML(
-        `⚠ Произошла ошибка:\n<b>${err.message}</b>\nПожалуйста, обратитесь к администратору @tiamin1989`,
-        Markup.inlineKeyboard([
-          [Markup.callbackButton("☰ Главное меню", "action_main")],
-        ]).extra()
-      );
+      delMessages(ctx);
+      return Promise.all([
+        ctx.replyWithHTML(
+          `⚠ Произошла ошибка:\n<b>${err.message}</b>\nПожалуйста, обратитесь к администратору @tiamin1989`,
+          Markup.inlineKeyboard([
+            [Markup.callbackButton("☰ Главное меню", "action_main")],
+          ]).extra()
+        ),
+      ]).then((results) => addMessage(results[0].message_id));
     });
 });
 

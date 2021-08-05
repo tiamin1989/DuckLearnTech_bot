@@ -172,9 +172,9 @@ const run_action_1c_bitrix_admin_base = (bot) => {
     ]).then((results) => addMessage(results[0].message_id));
   });
 
-  const showMessages = (textArray, ctx) => {
+  const showMessages = async (textArray, ctx) => {
     for (i = 0; i < textArray.length; i++) {
-      Promise.all([
+      const results = await Promise.all([
         ctx.replyWithHTML(
           textArray[i],
           i + 1 < textArray.length
@@ -189,7 +189,8 @@ const run_action_1c_bitrix_admin_base = (bot) => {
                 ],
               ]).extra()
         ),
-      ]).then((results) => addMessage(results[0].message_id));
+      ]);
+      addMessage(results[0].message_id);
     }
   }
 

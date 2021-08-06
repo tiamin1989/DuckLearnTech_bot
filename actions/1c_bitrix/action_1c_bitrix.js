@@ -12,7 +12,7 @@ const {
   run_action_1c_bitrix_admin_business,
 } = require("./action_1c_bitrix_admin_business");
 
-const { delMessages, addMessage } = require("../message-utils");
+const { delMessages, addMessage } = require("../../message-utils");
 
 const run_action_1c_bitrix = (bot) => {
   bot.action("action_1c_bitrix", (ctx) => {

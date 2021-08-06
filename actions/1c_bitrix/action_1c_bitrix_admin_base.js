@@ -1,8 +1,8 @@
 const { Markup } = require("telegraf");
 
-const User = require("../mongoose/model-user");
+const User = require("../../mongoose/model-user");
 
-const { delMessages, addMessage } = require("../message-utils");
+const { delMessages, addMessage } = require("../../message-utils");
 
 /* Текст подразделов курса */
 const text_1cb_a_b_b_a = `<b>⭐ Компания:</b> 1С-Битрикс\n<b>✍ Курс:</b> Администратор. Базовый\n⛳ <b>Подраздел:</b> Основы администрирования\n

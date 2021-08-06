@@ -1,5 +1,5 @@
 const { Markup } = require("telegraf");
-const { run_action_1c_bitrix } = require("./action_1c_bitrix");
+const { run_action_1c_bitrix } = require("./1c_bitrix/action_1c_bitrix");
 const { run_action_oferta } = require("./action_oferta");
 
 const { delMessages, addMessage } = require("../message-utils");

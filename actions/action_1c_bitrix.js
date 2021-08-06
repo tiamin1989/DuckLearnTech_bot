@@ -5,6 +5,12 @@ const {
 const {
   run_action_1c_bitrix_admin_base,
 } = require("./action_1c_bitrix_admin_base");
+const {
+  run_action_1c_bitrix_admin_modules,
+} = require("./action_1c_bitrix_admin_modules");
+const {
+  run_action_1c_bitrix_admin_business,
+} = require("./action_1c_bitrix_admin_business");
 
 const { delMessages, addMessage } = require("../message-utils");
 
@@ -27,9 +33,19 @@ const run_action_1c_bitrix = (bot) => {
               "action_1c_bitrix_admin_base"
             ),
           ],
-          /*[Markup.callbackButton("Администратор. Модули", "action_1c_bitrix_admin_modules")],
-          [Markup.callbackButton("Администратор. Бизнес", "action_1c_bitrix_admin_business")],
-          [Markup.callbackButton("Разработчик Bitrix Framework", "action_1c_bitrix_developer_bitrix_framework")],
+          [
+            Markup.callbackButton(
+              "Администратор. Модули",
+              "action_1c_bitrix_admin_modules"
+            ),
+          ],
+          [
+            Markup.callbackButton(
+              "Администратор. Бизнес",
+              "action_1c_bitrix_admin_business"
+            ),
+          ],
+          /*[Markup.callbackButton("Разработчик Bitrix Framework", "action_1c_bitrix_developer_bitrix_framework")],
           [Markup.callbackButton("Технология Композитный сайт", "action_1c_bitrix_composite_site_tech")],
           [Markup.callbackButton("Установка и настройка", "action_1c_bitrix_install_config")],
           [Markup.callbackButton("Курс для хостеров", "action_1c_bitrix_hosters")],
@@ -53,6 +69,8 @@ const run_action_1c_bitrix = (bot) => {
 
   run_action_1c_bitrix_content_manager(bot);
   run_action_1c_bitrix_admin_base(bot);
+  run_action_1c_bitrix_admin_modules(bot);
+  run_action_1c_bitrix_admin_business(bot);
 };
 
 module.exports = {

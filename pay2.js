@@ -150,6 +150,58 @@ const payFuncs = (bot) => {
       getInvoiceCategory(ctx.from.id, "action_1cb_a_b_s")
     );
   });
+
+  /* 1С-Битрикс -> Администратор. Модули */
+  bot.action("pay_action_1cb_a_m_c_a", (ctx) => {
+    ctx.deleteMessage();
+    return ctx.replyWithInvoice(
+      getInvoiceCategory(ctx.from.id, "action_1cb_a_m_c_a")
+    );
+  });
+
+  bot.action("pay_action_1cb_a_m_t_a", (ctx) => {
+    ctx.deleteMessage();
+    return ctx.replyWithInvoice(
+      getInvoiceCategory(ctx.from.id, "action_1cb_a_m_t_a")
+    );
+  });
+
+  bot.action("pay_action_1cb_a_m_i_c", (ctx) => {
+    ctx.deleteMessage();
+    return ctx.replyWithInvoice(
+      getInvoiceCategory(ctx.from.id, "action_1cb_a_m_i_c")
+    );
+  });
+
+  bot.action("pay_action_1cb_a_m_s_m", (ctx) => {
+    ctx.deleteMessage();
+    return ctx.replyWithInvoice(
+      getInvoiceCategory(ctx.from.id, "action_1cb_a_m_s_m")
+    );
+  });
+
+  /* 1С-Битрикс -> Администратор. Бизнес */
+  bot.action("pay_action_1cb_a_b_c_t_p", (ctx) => {
+    ctx.deleteMessage();
+    return ctx.replyWithInvoice(
+      getInvoiceCategory(ctx.from.id, "action_1cb_a_b_c_t_p")
+    );
+  });
+
+  bot.action("pay_action_1cb_a_b_i_m", (ctx) => {
+    ctx.deleteMessage();
+    return ctx.replyWithInvoice(
+      getInvoiceCategory(ctx.from.id, "action_1cb_a_b_i_m")
+    );
+  });
+
+  bot.action("pay_action_1cb_a_b_cas", (ctx) => {
+    ctx.deleteMessage();
+    return ctx.replyWithInvoice(
+      getInvoiceCategory(ctx.from.id, "action_1cb_a_b_cas")
+    );
+  });
+
 };
 
 module.exports = {
